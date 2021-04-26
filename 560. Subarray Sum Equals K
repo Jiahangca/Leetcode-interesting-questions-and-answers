@@ -1,0 +1,44 @@
+from Leetcode: Further, for every sum encountered, we also determine the number of times the sum sum-ksum−k has occurred already, since it will determine the number of times a subarray with sum kk has occurred up to the current index. 
+
+this algorithm works like dynamic programming:
+at each index, it updates the key-value pair to record its sum, and this record can be used again if s-k appears in the map. It means 
+(1) from the index of s-k to the index of s, the sum of interval is k. 
+(2) there are d[s-k] times possible expansion, because s-k appears d[s-k] times
+
+example: [1,-1,0,1,-1], k=0
+initially, 0 -> 1; related array []
+when i=1, 0 -> 2; related array [1,-1]
+when i=2, 0 -> 3; related array [1,-1,0]
+
+at the end, when sum=0 again, s-k = 0, it happens at the third element when i = 2. 
+so we know the interval [1,-1] has a sum 0, which equals to the k
+and the interval can expand 3 times because 0 -> 3:
+
+the first expansion: [1,-1], for 0 -> 3 case (actually no expand in this case);
+the second expansion: [0,1,-1], for 0 -> 2 case;
+the third expansion: [1,-1,0,1,-1], for 0 -> 1 case
+
+class Solution:
+    def subarraySum(self, nums: List[int], k: int) -> int:
+        d = {}
+        d[0] = 1
+        s = 0
+        count = 0
+        for i in range(len(nums)):
+            s += nums[i]
+            
+            if s-k in d:
+                count += d[s-k]
+                
+            if s not in d:
+                d[s] = 1
+            else:
+                d[s] += 1
+               
+            # if s-k in d:
+            #     count += d[s-k]             
+
+
+        return count
+        
+        
