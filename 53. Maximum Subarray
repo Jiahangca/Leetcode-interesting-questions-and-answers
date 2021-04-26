@@ -1,0 +1,22 @@
+1. different from 121. Best Time to Buy and Sell Stock, the value at here could be negative
+The difficult part of this problem is figuring out when a negative number is "worth" keeping in a subarray. 
+note current_array_sum and max_sum are updated seperately for the special case [-2, -1]
+2. infinity in python: float('inf') or float('-inf')
+
+class Solution:
+    def maxSubArray(self, nums: List[int]) -> int:
+        n = len(nums)
+
+        current_array_sum = 0
+        max_sum = nums[0]
+        
+        for i in range(n):
+            current_array_sum += nums[i]
+            
+            if current_array_sum > max_sum:
+                max_sum = current_array_sum
+                
+            if current_array_sum < 0:
+                current_array_sum = 0
+        
+        return max_sum
