@@ -3,6 +3,7 @@
 3. list.reverse(), reverse the list directly without a return. so when a = list.reverse(), a is none
 4. use deeo copy in this case because the height list is considered in two parts, and one part is inversed
 5. : in the method formal parameter, the left is the parameter itself, and the right is the auxiliary comment
+6. right_highest method can only trap water when the last bar is the highest, so seperate the whole figure into two parts using the highest bar
 
 
 class Solution:    
