@@ -1,0 +1,46 @@
+1. similar with pattern-matching algorithms, scan from left to right, and shift through the water to improve running time
+2. n = len() - 1 is the last index of an array, always use len() - 1, unless you want to check if it is empty
+3. list.reverse(), reverse the list directly without a return. so when a = list.reverse(), a is none
+4. use deeo copy in this case because the height list is considered in two parts, and one part is inversed
+5. : in the method formal parameter, the left is the parameter itself, and the right is the auxiliary comment
+
+
+class Solution:    
+    def trap(self, height: List[int]) -> int:
+
+        # highest index
+        h = 0
+        for i in range(len(height)):
+            if height[i] >= height[h]:
+                h = i
+        temp1 = copy.deepcopy(height[0:h+1])
+        temp2 = copy.deepcopy(height[h:])
+        print(temp1, temp2)
+        temp2.reverse()
+        return (self.right_highest(temp1) + self.right_highest(temp2))
+        
+        
+        
+    def right_highest(self, height):
+
+        i = 0
+#         the last index of the array
+        n = len(height) - 1
+        s = 0
+        while i < n:
+            if height[i] > 0:
+                start = i
+                j = i + 1
+                while (height[j] < height[i]) and (j < n):
+#                     height[7] in the example
+                        j += 1
+                end = j
+                # if (end == n) and (height[end] < height[i]):
+                #     i += 1
+                # else:
+                for water in range(i, j):
+                    s = s + min(height[i], height[j]) - height[water]
+                i = j
+            elif height[i] == 0:
+                i += 1
+        return s 
