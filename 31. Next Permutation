@@ -1,0 +1,48 @@
+1. in an array, index k is equal to -(len()-k)
+		use n=len() and write down your indices in your draft paper
+2. when you try to execute a loop, but you don't want to continue when a conditional expression is true:
+ (1) use a auxiliary function so you can use return to break the loop
+ (2) use break to terminate the loop (continue while terminate the current loop operation and continue the loop)
+ 3. think about the directtion when you want to traverse an array. in the update step, climb from right to left considering the special case: nums[k-1] has duplicates on the right; the same thing happens in trapping water and when you go down
+ 4. simplier ways to inverse nums[i:n-1]:
+	 (1) use another pointer j, i from left to right and j from right to left, just like hogh and low in binary search
+	 (2) `nums[k:] = nums[k:][::-1]` [::] is a way to get a slice of the list, means start, stop, step
+   
+   
+class Solution:
+    def nextPermutation(self, nums: List[int]) -> None:
+        """
+        Do not return anything, modify nums in-place instead.
+        """
+        n = len(nums)
+        
+        k = self.first_descending_index(nums)
+        
+        if k == 0:
+            nums.reverse()
+        else:
+            
+            # update index k-1
+            f = k
+            for i in range(-1, -(n-k)-1, -1):
+                if nums[i] <= nums[k-1] and nums[i-1] > nums[k-1]:
+                    f = n + (i-1)
+                    break
+                else: 
+                    f = n - 1
+                    
+            nums[k-1], nums[f]= nums[f], nums[k-1]
+            
+            # reorder the right
+            bound = (n - 1 - k) // 2 + k + 1
+            s = k + n -1
+            
+            for i in range(k, bound):
+                nums[i], nums[s - i] = nums[s - i], nums[i]
+                
+    
+    def first_descending_index(self, list):
+        for i in range(-1, -len(list), -1):
+            if list[i] > list[i-1]:
+                return len(list)+i
+        return 0
