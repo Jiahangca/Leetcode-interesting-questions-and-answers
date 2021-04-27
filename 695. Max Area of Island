@@ -1,5 +1,6 @@
 1. namespace of max_area
-2. the depth-first search, count 1 and change 1 to 0 algorithm is pretty straight forward, two tips:
+2. DFS always use recurssion, BFS could use a simple loop
+3. the depth-first search, count 1 and change 1 to 0 algorithm is pretty straight forward, two tips:
 		(1) all the 4 directions of (i, j) should be considered, not just right and doen. 
 			case [[0,1], [1,1]], (0, 1) == 1 calls the find_max_area() method, if only go right and doen,       (1, 0) will never be visited
 		(2) for the up direction, (i-1 >= 0); doe the left direction, (j - 1 >= 0).
