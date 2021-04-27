@@ -1,7 +1,9 @@
 1. in a recursion method, each time you call the recursion method itself, don't forget return; if not, because of the call stack, although you get a valid return at the top, the final return is None, which is the implicit return while you don't define your return statement
 the none return happens in ordinary method while you don't define return statement
 2. think about your algorithm carefully and write it doen before you start coding
-3. in binary search, it doesn't mater  mid = (low + high) // 2 or mid = (low + high) // 2 + 1, what matters is that the conditional expression should cover all the cases (including equal), and use mid-1 and mid + 1 to avoid endless recursion
+3. in binary search:
+	(1) the final case is low = mid = high (mid = (low + high) // 2, could also use mid = (low   +   high) // 2 + 1 and check if low = high, but avoid), if target == data[mid], it is a match, if         not, low > high in the next recursion and the search is failed
+	(2) the conditional expression should cover all the cases (including equal), and use mid-1        and mid + 1 to avoid endless recursion
 
 class Solution:
     def search(self, nums: List[int], target: int) -> int:
