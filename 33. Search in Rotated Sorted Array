@@ -1,0 +1,84 @@
+1. in a recursion method, each time you call the recursion method itself, don't forget return; if not, because of the call stack, although you get a valid return at the top, the final return is None, which is the implicit return while you don't define your return statement
+the none return happens in ordinary method while you don't define return statement
+2. think about your algorithm carefully and write it doen before you start coding
+3. in binary search, it doesn't mater  mid = (low + high) // 2 or mid = (low + high) // 2 + 1, what matters is that the conditional expression should cover all the cases (including equal), and use mid-1 and mid + 1 to avoid endless recursion
+
+class Solution:
+    def search(self, nums: List[int], target: int) -> int:
+        
+#         # 1. traversal
+#         n = len(nums)
+        
+#         for i in range(n):
+#             if nums[i] == target:
+#                 return i
+        
+#         return -1
+    
+        # 2. binary search
+        
+        # find rotation_index        
+        low = 0
+        high = len(nums) - 1
+        
+        if low == high:
+            if nums[0] == target:
+                return 0
+            else:
+                return -1
+            
+        else:
+            rotation_index = self.find_rotation_index(nums, low, high)
+        print(rotation_index)
+        
+        # no rotation
+        if rotation_index == 0:
+            return self.binary_search(nums, target, 0, high)
+        
+        if nums[0] <= target and nums[rotation_index-1] >= target:
+            return self.binary_search(nums, target, 0, rotation_index-1)
+        elif nums[rotation_index] <= target and nums[high] >= target: 
+            return self.binary_search(nums, target, rotation_index, high)
+        else:
+            return -1
+    
+    def find_rotation_index(self, data, low, high):
+        # low = 0
+        # high = len(data) - 1
+        
+        # no rotation_index
+        if data[low] <= data[high]:
+            return low
+          
+        mid = (high + low) // 2
+        # mid is the rotation_index, distinct
+        if data[mid] < data[mid-1]:
+            return mid
+        
+        # mid is not the rotation_index
+        # rotation_index at the right part
+        if data[mid] >= data[low]:
+            return self.find_rotation_index(data, mid+1, high)
+        # rotation_index at the left part            
+        elif data[mid] < data[low]:
+            return self.find_rotation_index(data, low, mid-1)
+        
+        
+        
+    
+
+    def binary_search(self, data, target, low, high):
+
+        if low > high:
+            return -1                    # interval is empty; no match
+        else:
+            mid = (low + high) // 2
+            if target == data[mid]:         # found a match
+                return mid
+            elif target < data[mid]:
+      # recur on the portion left of the middle
+                return self.binary_search(data, target, low, mid - 1)
+            else:
+      # recur on the portion right of the middle
+                return self.binary_search(data, target, mid + 1, high)
+        
