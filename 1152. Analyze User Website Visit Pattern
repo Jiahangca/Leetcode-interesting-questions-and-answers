@@ -1,0 +1,87 @@
+1. summarize operations and ADT for map and set
+	the advantage of map is that you don't need to care about the index and range
+2. list.insert(position, value), you don't need to do the shift by yourself
+3.            delimitation    python create
+tuple        (17,)           p = (17,)
+set           {17}            p = set(); p.add(17)
+map        {17:'w'}         p = {}; p[17] = 'w'
+4. hash() only accept immutable data type, list, the output data type is mutable, so use a tuple instead and convert it to list when return
+immutable: int, float, str, tuple, frozenset
+5. add Variables to Tuple: 
+a = (1, 2, 3)
+b = a + (4, 5, 6)  # (1, 2, 3, 4, 5, 6)
+c = b[1:]  # (2, 3, 4, 5, 6)
+or just redefine the identifer 
+6. How can I sort a dictionary by key? use OrderedDict
+In [1]: import collections
+In [2]: d = {2:3, 1:89, 4:5, 3:0}
+In [3]: od = collections.OrderedDict(sorted(d.items()))
+In [4]: od
+Out[4]: OrderedDict([(1, 89), (2, 3), (3, 0), (4, 5)])
+
+
+class Solution:
+    def mostVisitedPattern(self, username: List[str], timestamp: List[int], website: List[str]) -> List[str]:
+        # use one pointer going through all the tree lists, use name list check if it is the same visiter, build a new map using 3-sequence as key and visit times as value, and sorted by the time stamp
+
+        
+        # important!
+        # for a specific user, he can visit a 3_sequence, for example, ["home", "about", "career"], for many times at different time, but count ony once
+        # important!
+
+        
+#         1. use set(), consider visiters seperately, create a map of their i
+        n = len(username)
+   
+        name_list = list(set(username))
+
+#         the entries in the name_list are array and cannot used as identifier, so create a map, key is distinct name and value is the related i
+        index_dict = {}
+        for i in range(len(name_list)):
+            index_dict[name_list[i]] = [] 
+
+        for i in range(n):
+            index_dict[username[i]].append(i)
+        
+        for times in index_dict.values():
+            times.sort(key=lambda x: timestamp[x])
+
+
+
+#         2.  create a map, for each user, key is the possible 3-sequence and value is the count
+# create a list of all the 3-sequence according to the sorted value
+        possible_sequence = {}
+        max_tuple = []
+        max_count = 0    
+        for times in index_dict.values():
+
+            # has 3-sequence
+            if len(times) >= 3:
+#                 important!!!!!!!!!!!!!!!!!!!!!!
+                seen = set()
+                for i in range(0, len(times)-2):
+                    for j in range(i+1, len(times)-1):
+                        for k in range(j+1, len(times)):
+
+                            current_sequence = (website[times[i]], website[times[j]], website[times[k]])
+                            
+                            if current_sequence not in seen:
+                                seen.add(current_sequence)
+                                # update possible_sequence only when we haven't seen the current_sequence for this user
+                            
+                                if current_sequence not in possible_sequence:
+                                    possible_sequence[current_sequence] = 1
+                                else:
+                                    possible_sequence[current_sequence] += 1
+
+                                if possible_sequence[current_sequence] == max_count:
+                                    max_tuple.append(current_sequence)
+                                elif possible_sequence[current_sequence] > max_count:
+                                    max_tuple = [current_sequence]
+                                    max_count = possible_sequence[current_sequence]
+                                
+#           3. return as a list
+
+        max_tuple.sort()
+        return list(max_tuple[0])
+        
