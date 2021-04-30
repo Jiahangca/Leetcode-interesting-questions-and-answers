@@ -1,0 +1,81 @@
+1. read the question carefully: **row-sorted**! the left is always 0 and at one index change to always 1; if it is not row-sorted, there is no algorithm better than brute force
+2. once meet a search, the first reflection is binary search, the second reflection is check if it is sorted (or need to be sorted)
+binary search template:
+
+    def binary_search(data, target, low, high):
+        if low > high:
+            return False
+        else:
+            mid = (low + high) // 2
+            if target == data[mid]:
+                return True
+            elif target < data[mid]:
+                return binary_search(data, target, low, mid-1)
+            else:
+                return binary_search(data, target, mid+1, high)
+3. the most tricky problem is when should we end the binary search:
+two special case: [1,1]; [0,1,1,1]
+so mid == 0 or binaryMatrix.get(r, mid-1) == 0
+if mid ==0 and mid_value == 1, return 0; if mid != 0, mid_value == 1, mid-1_value == 0, return mid
+
+
+class Solution:
+    def leftMostColumnWithOne(self, binaryMatrix: 'BinaryMatrix') -> int:
+        
+        # 1. brute force:
+        # for column:
+        #     for row
+
+#         r, c = binaryMatrix.dimensions()
+#         for i in range(c):
+#             for j in range(r):
+              
+#                 if binaryMatrix.get(j, i) == 1:
+#                     return i
+#         return -1
+    
+        # 2. binary search
+        # column is random, but row is sorted, binary search each row and return the smallest 1 index, then compare results from different rows
+
+        r, c = binaryMatrix.dimensions()
+        target_list = []
+        
+        for i in range(r):
+            target_list.append(self.binary_search(binaryMatrix, 1, i, 0, c-1))
+        
+        # for k in target_list:
+        #     print(k)
+        
+        target_list.sort()
+
+        if target_list[-1] == -1:
+            return -1
+        else:
+            for k in target_list:
+                if k > -1:
+                
+                    return k
+
+        
+    def binary_search(self, binaryMatrix, target, r, c_low, c_high):
+        # return the index of the leftmost 1, or -1 if not exist
+        if c_low > c_high:
+            return -1
+        else:
+            mid = (c_low + c_high) // 2
+            mid_value = binaryMatrix.get(r, mid)
+            
+            
+            
+            # target = 1, mid_value = 1, go left
+            if target == mid_value:
+                
+#                0 at left, 1 ar right, find leftmost 1, so check mid == low
+                if mid == 0 or binaryMatrix.get(r, mid-1) == 0:
+                    return mid
+                else:
+                    return self.binary_search(binaryMatrix, target, r, c_low, mid-1)
+            
+            # target = 1, mid_value = 0, go right
+            elif target != mid_value:
+                return self.binary_search(binaryMatrix, target, r, mid+1, c_high)
