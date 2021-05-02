@@ -1,0 +1,91 @@
+1. `data = [1,1,1,1,1,2,2,3,3], data.remove(1)`, only remove a single 1
+2. unlike Scala, in Python both no value and no refer use None
+3. the difficulty is which task should be chosen as the current task. we use leftmost_ready(), choose from colddown left tasks accoding to task_count 
+4. it is true this is an array question, but it is also a extramum question, so you should consider greedy method and dynamic programming before yout maps
+5. in the greedy method, we calculate idle_time rather than directly total time, for example, [A,A,B,B], n=2, fmax=(2-1)2 = 3, and fmax is never updated later. min(f_max-1, B_frequency)=1, so idle_time = 1, and another B is not runned in idle time. total_time = idle_time + len(tasks)
+
+
+
+class Solution:
+    def leastInterval(self, tasks: List[str], n: int) -> int:
+#         use a map, key is task and value is cooldown, to count the cooldown time
+#         the more numbers a task has, the higher priority it has, use a list to sort the tasks according to its number
+
+        # 1. sorted task list
+        task_count = {}
+        task_list = list(set(tasks))
+        for i in range(len(tasks)):
+            if tasks[i] not in task_count:
+                task_count[tasks[i]] = 0
+            task_count[tasks[i]] += 1
+        task_list.sort(key = lambda x: task_count[x], reverse = True)
+        
+#         2. greedy method:  it is true this is an array question, but it is also a extremum question, so you should consider greedy method and dynamic programming before yout maps
+        max_cover = task_count[task_list[0]] - 1
+        idle_time = max_cover * n
+        for i in range(1, len(task_list)):
+            if idle_time > 0:
+                idle_time -= min(task_count[task_list[i]], max_cover)
+        
+        if idle_time < 0:
+            idle_time = 0
+            
+        return idle_time + len(tasks)
+
+        
+#         # 2. build a cooldown map
+#         colddown = {}
+#         for i in range(len(task_list)):
+#             colddown[task_list[i]] = 0
+ 
+#         # 3. main
+#         times = 0
+#         while len(tasks) > 0:
+#             # for i in range(len(task_list)):
+#             # shouldn'e use for loop, use an auxiliary method to determine the current task
+            
+#             current_task = self.leftmost_ready(task_list, colddown, task_count)
+#             if current_task is not None:
+            
+#                 times += 1
+#                 tasks.remove(current_task)
+#                 task_count[current_task] -= 1
+#                 colddown[current_task] = n
+#                 for task in colddown.keys():
+#                     if task != current_task and colddown[task] > 0:
+#                         colddown[task] -= 1
+                            
+#                 # all the tasks are colding down
+#             else:
+#                 times += 1
+#                 for task in colddown.keys():
+#                     if task_count[task] > 0:
+#                         colddown[task] -= 1
+                        
+#         return times
+                    
+#         # 4. need an auxiliary method, find the leftmost colddown task in task_list:
+#     def leftmost_ready(self, task_list, colddown, task_count):
+# #         current task is not always the left most task.
+# #         this is a good question: which task should be chosen? return the task with the highest task count
+#         task_list = task_list
+#         colddown = colddown
+#         task_count = task_count
+        
+#         candidates = []
+#         max_count = 0
+
+#         for i in range(len(task_list)):
+#             if colddown[task_list[i]] == 0 and task_count[task_list[i]] > 0:
+#                 if task_count[task_list[i]] > max_count:
+#                     max_count = task_count[task_list[i]]
+#                     candidates = [task_list[i]]
+#                 elif task_count[task_list[i]] == max_count:
+#                     candidates.append(task_list[i])
+        
+#         if len(candidates) == 0:
+#             return None
+#         else:
+#             return candidates[0]
+
+        
